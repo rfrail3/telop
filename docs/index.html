@@ -291,13 +291,6 @@
 
     function txtformat() {
 
-            // Tachar texto
-            if (['0','2','7','9'].indexOf(document.getElementById("mrecep").options[mrecep.selectedIndex].value) > -1) {
-                document.getElementById("form1").style.textDecoration = "none";
-            } else {
-                document.getElementById("form1").style.textDecoration = "line-through";
-            }
-
             // Resetear valores que se van a modificar
             document.getElementById("ophora").style.display = "table-row";
             document.getElementById("optdst").style.display = "table-row";
@@ -305,6 +298,14 @@
             document.getElementById("opref").style.display = "table-row";
             document.getElementById("opincd").style.display = "none";
             document.getElementById("oprectf").style.display = "none";
+            document.getElementById("form1").style.textDecoration = "none";
+            document.getElementById("form1").style.color = "maroon";
+
+            // Tachar texto
+            if (['3','5','6','9'].indexOf(document.getElementById("mrecep").options[mrecep.selectedIndex].value) > -1) {
+                document.getElementById("form1").style.textDecoration = "line-through";
+                document.getElementById("form1").style.color = "darkgrey";
+	    }
 
             // Mostrar opciones de servicio interno
             if ( document.getElementById("mrecep").options[mrecep.selectedIndex].value == 2 ) {
@@ -629,6 +630,9 @@
     function imprimir(msg) {
 
         var salida = '<hr>';
+        if (msg['procmsg']) {
+	    salida += "<p id='procmsg'>" + msg['procmsg'] + '</p><hr>';
+	}
 
         switch (msg['tipo']) {
             case '0': salida += "<i>Tipo:</i>\t\t 0 - General<br>"; break;
@@ -714,11 +718,8 @@
             salida += "<i>Interrupción:</i>\t " + msg['regfin'] + "<br>";
         }
 
-        if (msg['procmsg']) {
-            if ((msg['tipo'] == '0') || (msg['tipo'] == '2')) {
-                salida += "<i>Novenales:</i>\t " + msg['novenales'].substring(0,2) + '.' + msg['novenales'].substring(2) + "<br>";
-            }
-            salida += "<i>Mensaje:</i>\t &#8628;<hr><p id='procmsg'>" + msg['procmsg'] + '</p>';
+        if (msg['novenales']) {
+            salida += "<i>Novenales:</i>\t " + msg['novenales'].substring(0,2) + '.' + msg['novenales'].substring(2) + "<br>";
         }
         if (!(/^ERROR/g).test(msg['procmsg']) && (/^\d\/(.+?)\/(.+?)/).test(msg['procmsg'])) {
             salida += "<hr><p>";
