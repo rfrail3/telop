@@ -80,6 +80,13 @@
 	    font-weight: bold;
 	    text-align: center;
 	}
+	pre p#procmsg {
+	    background-color: rgba(255, 255, 255, 0.1);
+	    border: 1px solid grey;
+	    border-radius: 15px;
+	    padding: 1em;
+	    margin-bottom: 0.5em;
+	}
 	img#transgif{
 	    width: 310px;
 	    height: 300px;
@@ -121,6 +128,7 @@
 	}
 	#opincd, #oprectf { display: none; }
 	.info a{ color: maroon; }
+	pre i { margin-left: 5px; }
 	textarea { margin-bottom: 5px; }
 	pre, button, textarea, div#codops { width: 85%; }
 	span#destgif img{ box-shadow: 0px 10px 6px -6px #777; border: 1px solid #d6d6d6; }
@@ -631,7 +639,7 @@
 
         var salida = '<hr>';
         if (msg['procmsg']) {
-	    salida += "<p id='procmsg'>" + msg['procmsg'] + '</p><hr>';
+	    salida += "<p id='procmsg'>" + msg['procmsg'] + '</p>';
 	}
 
         switch (msg['tipo']) {
