@@ -213,7 +213,7 @@ def zcodif_codificar(arg, msg, lencript):
 
         else:
             logging.error('Sin tipo de mensaje')
-            sys.exit(-1)
+            sys.exit(1)
 
     # Torre '0' sin valor. Indicación única de torre
     if int(msg['origen']) == 0 and int(msg['destino']) != 0:
@@ -370,7 +370,7 @@ def zcodif_descodificar(arg, msg, lencript):
 
     except Exception as exp:
         logging.error('Imposible descodificar --> %s', str(exp))
-        sys.exit(-1)
+        sys.exit(1)
 
     imprimir(arg, msg)
 
