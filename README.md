@@ -326,11 +326,9 @@ A/B/___C__/___D____/E
 
 ### Documentos relevantes
 
-Revisión Código Telégrafo Óptico Mathé
-*revision_codigo_telegrafo.pdf*
+Revisión Código Telégrafo Óptico Mathé -> *revision_codigo_telegrafo.pdf*
 
-Análisis sobre la presencia de niebla en las líneas civiles de telegrafía óptica
-*analisis_presencia_niebla.pdf*
+Análisis sobre la presencia de niebla en las líneas civiles de telegrafía óptica -> *analisis_presencia_niebla.pdf*
 
 
 ### Más información
