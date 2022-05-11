@@ -408,7 +408,7 @@
                             elem = '#';
                         }
                     }
-                    // Asignar valor de la posicion del caracter, siempre con dos digitos '00'
+                    // Asignar valor de la posicion del carácter, siempre con dos digitos '00'
                     cipert += lencript.indexOf(elem).toString().padStart(2, '0');
                 }
                 console.log('Texto cod: ' + cipert);
@@ -552,6 +552,12 @@
                         let posicion = (cipert[i] + cipert[(i + 1)]);
                         msg['procmsg'] += lencript[parseInt(posicion)];
                     }
+
+                    // Fix - Solventar cambio en la posición de los valores '€' y ' ' del diccionario v2.0
+                    if ((msg['procmsg'].match(/€/g) || []).length > (msg['procmsg'].match(/\ /g) || []).length) {
+	                console.log("Diccionario rev.");
+                        msg['procmsg'] = msg['procmsg'].replaceAll('€', ' ');
+	            }
                 }
 
                 // Asignar tipo según indicación
@@ -591,10 +597,10 @@
             msg['prioridad'] = search[2];
 
             // Según nº torre o comandancia
-            if ([2,4].indexOf(search[3].length) > -1) {
+            if ([2, 4].indexOf(search[3].length) > -1) {
                 msg['origen'] = search[3].substring(0,2);
                 msg['destino'] = search[3].substring(2);
-            } else if ([3,6].indexOf(search[3].length) > -1) {
+            } else if ([3, 6].indexOf(search[3].length) > -1) {
                 msg['origen'] = search[3].substring(0,3);
                 msg['destino'] = search[3].substring(3);
             } else {
@@ -800,6 +806,8 @@
 
     function procesar() {
 
+        const version = 2.1;
+
         var msg = {}; // Diccionario de mensaje
         msg['mensaje'] = document.querySelector('textarea#form1').value;  // Asignar entrada
         if (!msg['mensaje']){
@@ -810,7 +818,7 @@
                 'a','b','c','d','e','f','g','h','i','j','k','l','m','n','o','p','q','r','s','t','u','v','w','x','y','z',
                 'A','B','C','D','E','F','G','H','I','J','K','L','M','N','O','P','Q','R','S','T','U','V','W','X','Y','Z',
                 '!','"','#','$','%','&',"'",'(',')','*','+',',','-','.','/',':',';','<','=','>','?','@','[','\\',']','^','_','`','{','|','}','~',
-                'Ñ','ñ','¿',' ','€',' '];  // Los caracteres del mensaje se sustituyen por la posición que ocupan en la lista
+                'Ñ','ñ','¿','€','',' '];  // Los caracteres del mensaje se sustituyen por la posición que ocupan en la lista (completa del 00 al 99)
 
         // Asignar descodificación / codificación automaticamente. Si comienza por ~ */*/* -> descodificar
         if ((/^\d\/(.+?)\/(.+?)/).test(msg['mensaje'])) {

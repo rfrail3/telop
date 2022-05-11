@@ -18,6 +18,8 @@
 
 import argparse, string, time, re, logging, sys, unicodedata, random
 
+__version__ = '2.1'
+
 # Tamaño máximo de texto a codificar
 MAX_TXT = 250
 
@@ -43,7 +45,7 @@ def get_arguments(msg, lencript):
     parser.add_argument('mensaje', default=msg['mensaje'], nargs='?', action='store', type=str, help='texto del mensaje entre \' \'')
     parser.add_argument('--batch', default=False, action='store_true', help='sólo imprime mensaje resultante')
     parser.add_argument('-v', '--verbose', default=False, action='store_true', help='debug')
-    parser.add_argument('--version', action='version', version='%(prog)s 2')
+    parser.add_argument('--version', action='version', version='%(prog)s ' + __version__)
     parser.add_argument('-z', dest='zcodif', default=None, type=int, choices=[0, 1], help='proceso a ejecutar -> (auto) | 0-codificar | 1-descodificar')
 
     arg = parser.parse_args()
@@ -157,7 +159,7 @@ def zcodif_codificar(arg, msg, lencript):
                 if elem not in lencript:  #  finalmente sustituir por '#' si no existe
                     elem = '#'
 
-            # Asignar valor de la posicion del caracter, siempre con dos digitos '00'
+            # Asignar valor de la posicion del carácter, siempre con dos digitos '00'
             cipert += str(lencript.index(elem)).zfill(2)
 
         logging.info('Texto cod:\t\t %s', str(cipert))
@@ -303,6 +305,11 @@ def zcodif_descodificar(arg, msg, lencript):
                 for i in range(0, long_nov - 1, 2):
                     msg['procmsg'] += lencript[int(cipert[i] + cipert[i+1])]
 
+                # Fix - Solventar cambio en la posición de los valores '€' y ' ' del diccionario v2.0
+                if msg['procmsg'].count('€') > msg['procmsg'].count(' '):
+                    logging.info('Diccionario rev.')
+                    msg['procmsg'] = msg['procmsg'].replace('€', ' ')
+
             # Asignar tipo según indicación
             if search.group(1):
                 msg['tipo'] = search.group(1)
@@ -338,10 +345,10 @@ def zcodif_descodificar(arg, msg, lencript):
         msg['prioridad'] = search.group(2)
 
         # Según nº torre o comandancia
-        if len(search.group(3)) in (2,4):
+        if len(search.group(3)) in (2, 4):
             msg['origen'] = search.group(3)[:2]
             msg['destino'] = search.group(3)[2:]
-        elif len(search.group(3)) in (3,6):
+        elif len(search.group(3)) in (3, 6):
             msg['origen'] = search.group(3)[:3]
             msg['destino'] = search.group(3)[3:]
         else:
@@ -463,8 +470,8 @@ def imprimir(arg, msg):
 def main():
     '''Inicio'''
 
-    # Los caracteres del mensaje se sustituyen por la posición que ocupan en la lista
-    lencript = list(string.digits + string.ascii_letters + string.punctuation) + ['Ñ', 'ñ', '¿', ' ', '€', ' ']
+    # Los caracteres del mensaje se sustituyen por la posición que ocupan en la lista (completa del 00 al 99)
+    lencript = list(string.digits + string.ascii_letters + string.punctuation) + ['Ñ', 'ñ', '¿', '€', '', ' ']
 
     # Diccionario de mensaje. Valores por defecto
     msg = {'prioridad': '0', 'tipo': '0', 'origen': 1, 'destino': 52, 'horadia': None, 'referencia': 0, 'novenales': None, 'mensaje': '...', 'procmsg': None, 'incd': '00', 'rect': None, 'regfin': ''}
