@@ -326,9 +326,11 @@ A/B/___C__/___D____/E
 - Opcionalmente, mediante el uso de una contraseña `telop --password '123'`, se permite encriptar/desencriptar el contenido del mensaje, manteniendo libre la cabecera. El método emplea Format-preserving, Feistel-based encryption (FFX), generando una cadena de números de apariencia aleatoria para quien intente descodificar el mensaje sin emplear la contraseña de encriptación.
 
 
-### Interpretación del original
+### Documentos relevantes
 
-Consultar documento *revision_codigo_telegrafo.pdf*
+Revisión Código Telégrafo Óptico Mathé -> [revision_codigo_telegrafo.pdf](https://github.com/rfrail3/telop/blob/main/revision_codigo_telegrafo.pdf)
+
+Análisis sobre la presencia de niebla en las líneas civiles de telegrafía óptica -> [analisis_presencia_niebla.pdf](https://github.com/rfrail3/telop/blob/main/analisis_presencia_niebla.pdf)
 
 
 ### Más información
