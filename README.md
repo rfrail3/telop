@@ -8,7 +8,7 @@ Telop (TELégrafoÓPtico) - Utilidad para codificar y descodificar mensajes de t
 
 **Codificar mensaje:**
 ```
-$ telop --mensaje 'Telegrama de prueba'
+$ telop 'Telegrama de prueba'
 --------------------------------------------------------------------------------
 Tipo:		 0 Telegrama general
 Prioridad:	 0
@@ -19,14 +19,14 @@ Referencia:	 00
 Novenales:	 04.2
 --------------------------------------------------------------------------------
 
-Mensaje:	 0/0x1052/2310x80x/042/5x1421x41/627102x10/971314972/52730141x/10/0
+Mensaje:	 0/0x1052/2310x80x/042/5x1421x41/627102x10/9x13149x2/52730141x/10/0
 
 --------------------------------------------------------------------------------
 ```
 
 **Descodificar mensaje:**
 ```
-$ telop --mensaje '0/0x1052/2310x80x/042/5x1421x41/627102x10/971314972/52730141x/10/0'
+$ telop '0/0x1052/2310x80x/042/5x1421x41/627102x10/9x13149x2/52730141x/10/0'
 --------------------------------------------------------------------------------
 Tipo:		 0 Telegrama general
 Prioridad:	 0
@@ -51,9 +51,9 @@ Mensaje habitual. Su contenido era cifrado y se enviaba entre comandancias, norm
 Cuando es recibido por una torre, ya sea la de destino o alguna intermedia, se devuelve un mensaje de "Acuse de recibo" al emisor indicando el estado de la recepción. 
 
 - Codificar texto de la manera más sencilla de la torre '001' (por defecto) a la '041':
-    > telop -d 41 -m 'Texto ejemplo' 
+    > telop -d 41 'Texto ejemplo' 
 - Prioridad '8' con referencia '12', origen '010' y destino '050' :
-    > telop -p 8 -r 12 -o 10 -d 50 -m 'Texto'
+    > telop -p 8 -r 12 -o 10 -d 50 'Texto'
 
 
 **2 - Servicio interno**
@@ -61,9 +61,9 @@ Cuando es recibido por una torre, ya sea la de destino o alguna intermedia, se d
 Similar a un mensaje general, pero utilizado sólo para indicaciones de servicio entre cualquier operario de torre.
 
 - Mensaje interno de la torre '001' (por defecto) a la '045' con formato de fecha breve:
-    > telop -t 2 -d 45 -b -m 'Texto ejemplo'
+    > telop -t 2 -d 45 -b 'Texto ejemplo'
 - Mensaje interno de la torre '045'a la '001' con formato de fecha breve:
-    > telop -t 2 -o 45 -d 1 -b -m 'Texto ejemplo'
+    > telop -t 2 -o 45 -d 1 -b 'Texto ejemplo'
 
 
 **3 - Vigilancia**
@@ -113,7 +113,7 @@ Solicitar la anulación o retransmisión de un mensaje por su referencia.
 En cualquier mensaje con fecha se puede pasar el argumento '-b' para utilizar el formato reducido:
 
 - Mensaje con origen '010', destino '021' y formato de fecha breve:
-    > telop -o 10 -d 21 -b -m 'Texto'
+    > telop -o 10 -d 21 -b 'Texto'
 
 
 **Sustituir indicación de torre por comandancia**
@@ -121,7 +121,7 @@ En cualquier mensaje con fecha se puede pasar el argumento '-b' para utilizar el
 Empleando el argumento '-c', en cualquier mensaje se puede cambiar el formato de torre, representado por tres cifras, al de comandancia, formado por dos cifras.
 
 - Mensaje con origen '01', destino '07' y opción de comandancia:
-    > telop -o 1 -d 7 -c -m 'Texto'
+    > telop -o 1 -d 7 -c 'Texto'
 
 
 **Indicar sólo una torre o comandancia**
@@ -132,9 +132,13 @@ Es posible generar un mensaje con sólo un número de torre en vez del formato h
 ### Opciones del programa:
 ```
 usage: telop [-h] [-p {0,4,8}] [-t {0,2,3,5,6,9}] [--incd {0,1,2,3,4}]
-             [-o origen] [-d destino] [-b] [--rect {6,9}] [-c]
-             [--diccionario] [--password PASSWORD] [-r referencia]
-             [-m MENSAJE] [--batch] [-v] [--version] [-z {0,1}]
+             [-o origen] [-d destino] [-b] [--rect {6,9}] [-c] [--diccionario]
+             [--password PASSWORD] [-r referencia] [--batch] [-v] [--version]
+             [-z {0,1}]
+             [mensaje]
+
+positional arguments:
+  mensaje               texto del mensaje entre ' '
 
 optional arguments:
   -h, --help            show this help message and exit
@@ -142,8 +146,8 @@ optional arguments:
                         prioridad -> 0-ordinario | 4-urgente | 8-urgentísimo
   -t {0,2,3,5,6,9}, --tipo {0,2,3,5,6,9}
                         tipo de servicio -> 0-general | 2-interno |
-                        3-vigilancia | 5-continuación | 6-acuse recibo
-                        | 9-rectificar
+                        3-vigilancia | 5-continuación | 6-acuse recibo |
+                        9-rectificar
   --incd {0,1,2,3,4}    incidencia en acuse -> 1-niebla | 2-ausencia |
                         3-ocupada | 4-avería
   -o origen, --origen origen
@@ -157,8 +161,6 @@ optional arguments:
   --password PASSWORD   codificar mensaje con contraseña
   -r referencia, --referencia referencia
                         nº referencia despacho
-  -m MENSAJE, --mensaje MENSAJE
-                        texto del mensaje entre ' '
   --batch               sólo imprime mensaje resultante
   -v, --verbose         debug
   --version             show program's version number and exit
