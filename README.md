@@ -102,8 +102,8 @@ Solicitar la anulación o retransmisión de un mensaje por su referencia.
 
 - Repetir mensaje con referencia '23' desde la torre '021' a la '001':
     > telop -t 9 -o 21 -d 1 --rect 6 -r 23
-- Anular mensaje con referencia '12' desde la torre '021' a la '001':
-    > telop -t 9 -o 21 -d 1 --rect 9 -r 12
+- Anular mensaje con referencia '12' desde la torre '021' a la '001' con prioridad '8':
+    > telop -t 9 -o 21 -d 1 --rect 9 -r 12 -p 8
 
 
 ### Modificaciones de formato
@@ -262,12 +262,12 @@ A/B/___C__/___D____/E
 | ----------- B prioridad(1)
 ------------- A tipo de servicio(1)
 
-9  /0x10x5/04/6 -> Rectificar
-|      |   |  |
-|      |   |  - E sufijo tipo de petición(1) 
-|      |   ---- D referencia(2)
-|      -------- C torre de origen(3) + torre de destino(3)
-|
+9/0/0x10x5/04/6 -> Rectificar
+| |    |   |  |
+| |    |   |  - E sufijo tipo de petición(1)
+| |    |   ---- D referencia(2)
+| |    -------- C torre de origen(3) + torre de destino(3)
+| ------------- B prioridad(1)
 --------------- A tipo de servicio(1)
 ```
 

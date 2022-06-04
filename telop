@@ -209,7 +209,6 @@ def zcodif_codificar(arg, msg, lencript):
         elif msg['tipo'] == '9':  # Rectificar
             # 9/0x1052/09/6
             # 9/0x1052/09/9
-            msg['prioridad'] = ''
             msg['horadia'] = ''
             sufijo = '/' + msg['rect']
 
@@ -276,7 +275,7 @@ def zcodif_descodificar(arg, msg, lencript):
             logging.info('Intrr.:\t %s', str(regfin[1]))
             ciperm = ciperm.replace(regfin[1], '')
 
-        # Regex para cabeceras de mensajes (manetener en cada caso los mismos 5 grupos) - https://regex101.com/r/uxJuGZ/20
+        # Regex para cabeceras de mensajes (manetener en cada caso los mismos 5 grupos) - https://regex101.com/r/uxJuGZ/22
 
         # Procesar tipo 0 o 2. Telegrama con mensaje
         if re.match(r'^(?:(2)/|([048])/)(\d{2,6})/(\d{2,8})/(\d{0,3})\b', ciperm) is not None:
@@ -333,8 +332,8 @@ def zcodif_descodificar(arg, msg, lencript):
             msg['incd'] = search.group(5)
 
         # Procesar tipo 9
-        elif re.match(r'^(9)()/(\d{2,6})/(\d{2})/([69])\b', ciperm) is not None:
-            search = re.search(r'^(9)()/(\d{2,6})/(\d{2})/([69])\b', ciperm)
+        elif re.match(r'^(9)/([048])/(\d{2,6})/(\d{2})/([69])\b', ciperm) is not None:
+            search = re.search(r'^(9)/([048])/(\d{2,6})/(\d{2})/([69])\b', ciperm)
             msg['tipo'] = search.group(1)
             msg['rect'] = search.group(5)
 

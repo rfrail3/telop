@@ -452,7 +452,6 @@
 
             case '9':  // Servicio de rectificación
                 var prefijo = msg['tipo'] + '/';
-                msg['prioridad'] = '';
                 msg['horadia'] = '';
                 sufijo = '/' + msg['rectf'];
                 break;
@@ -584,8 +583,8 @@
                 msg['incd'] = search[5];
 
             // Procesar tipo 9
-            } else if ((/^(9)()\/(\d{2,6})\/(\d{2})\/([69])\b/).test(ciperm)) {
-                search = (/^(9)()\/(\d{2,6})\/(\d{2})\/([69])\b/g).exec(ciperm);
+            } else if ((/^(9)\/([048])\/(\d{2,6})\/(\d{2})\/([69])\b/).test(ciperm)) {
+                search = (/^(9)\/([048])\/(\d{2,6})\/(\d{2})\/([69])\b/g).exec(ciperm);
                 msg['tipo'] = search[1]
                 msg['rectf'] = search[5]
 
