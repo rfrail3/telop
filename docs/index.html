@@ -126,7 +126,7 @@
 	div#desc li{
 	    margin-bottom: 0.4em;
 	}
-	#opincd, #oprectf { display: none; }
+	#opincd, #oprectf, #fill { display: none; }
 	.info a{ color: maroon; }
 	pre i { margin-left: 5px; }
 	textarea { margin-bottom: 5px; }
@@ -221,6 +221,10 @@
                     <td onmouseover="desc(innerHTML)" onmouseout="desc()">Referencia:</td>
                     <td><input type="number" id="mref" min="1" max="99" pattern="\d{2}" /></td>
                 </tr>
+                <tr id="fill">
+                    <td>&nbsp; </td>
+                    <td>&nbsp; </td>
+                </tr>
             </table>
             <div id="desc"></div>
         </div>
@@ -306,6 +310,7 @@
             document.getElementById("opref").style.display = "table-row";
             document.getElementById("opincd").style.display = "none";
             document.getElementById("oprectf").style.display = "none";
+            document.getElementById("fill").style.display = "none";
             document.getElementById("form1").style.textDecoration = "none";
             document.getElementById("form1").style.color = "maroon";
 
@@ -323,11 +328,13 @@
             if ( document.getElementById("mrecep").options[mrecep.selectedIndex].value == 3 ) {
                 document.getElementById("opprio").style.display = "none";
                 document.getElementById("opref").style.display = "none";
+                document.getElementById("fill").style.display = "table-row";
             }
             // Mostrar opciones Continuación
             if ( document.getElementById("mrecep").options[mrecep.selectedIndex].value == 5 ) {
                 document.getElementById("ophora").style.display = "none";
                 document.getElementById("optdst").style.display = "none";
+                document.getElementById("fill").style.display = "table-row";
             }
             // Mostrar opciones Acuse Recibo
             if ( document.getElementById("mrecep").options[mrecep.selectedIndex].value == 6 ) {
