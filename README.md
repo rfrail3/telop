@@ -249,25 +249,25 @@ A/B/___C__/___D____/E
 6/0/0x10x5/2341040x/0x -> Acuse de recibo
 | |    |       |    |
 | |    |       |    -- E sufijo acuse de recibo([1-2])
-| |    |       ------- D hora(2) + minutos(2) + dia(2) + referencia(2)
+| |    |       ------- D hora(2) + minutos(2) + dia(2) + referencia mensaje recibido(2)
 | |    --------------- C torre de origen(3) + torre de destino(3)
-| -------------------- B prioridad(1)
+| -------------------- B prioridad mensaje recibido(1)
 ---------------------- A tipo de servicio(1)
 
 5/0/0x1   /03 -> Continuación
 | |    |   |
 | |    |   |
-| |    |   -- D referencia(2)
+| |    |   -- D referencia mensaje a continuar(2)
 | |    ------ C torre de origen(3)
-| ----------- B prioridad(1)
+| ----------- B prioridad mensaje a continuar(1)
 ------------- A tipo de servicio(1)
 
 9/0/0x10x5/04/6 -> Rectificación
 | |    |   |  |
 | |    |   |  - E sufijo tipo de petición(1)
-| |    |   ---- D referencia(2)
+| |    |   ---- D referencia mensaje rectificado(2)
 | |    -------- C torre de origen(3) + torre de destino(3)
-| ------------- B prioridad(1)
+| ------------- B prioridad mensaje rectificado(1)
 --------------- A tipo de servicio(1)
 ```
 
