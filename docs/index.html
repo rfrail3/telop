@@ -355,11 +355,13 @@
 
         var prioridades = ['0','4','8'];
         var destinos = ['18','27','36','50','52'];
+        var rectificar = ['6','9'];
 
         selectElement('mprio', prioridades[Math.floor(Math.random() * prioridades.length)]);
         selectElement('morig', '1');
         selectElement('mdest', (destinos[Math.floor(Math.random() * destinos.length)]));
         selectElement('mref', (Math.floor(Math.random() * 99) + 1));
+        selectElement('rectf', (rectificar[Math.floor(Math.random() * rectificar.length)]));
 
         document.getElementById("codops").style.display = "flex";
         document.querySelector('pre#salida').innerHTML = '';
@@ -703,7 +705,7 @@
                 if (tsimple.length == 3) {
                     salida += "<i>Torre:</i>\t\t " + tsimple + "<br>";
                 } else if (tsimple.length == 2) {
-                   salida += "<i>Comandancia:</i>\t " + tsimple + "<br>";
+                    salida += "<i>Comandancia:</i>\t " + tsimple + "<br>";
                 }
             }
         }
