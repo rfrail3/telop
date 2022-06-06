@@ -18,7 +18,7 @@
 
 import argparse, string, time, re, logging, sys, unicodedata, random
 
-__version__ = '2.1'
+__version__ = '2.2'
 
 # Tamaño máximo de texto a codificar
 MAX_TXT = 250
@@ -29,8 +29,8 @@ def get_arguments(msg, lencript):
     parser = argparse.ArgumentParser()
     parser.add_argument('-p', '--prioridad', default=msg['prioridad'], action='store', type=str, choices=['0', '4', '8'],
                         help='prioridad -> 0-ordinario | 4-urgente | 8-urgentísimo')
-    parser.add_argument('-t', '--tipo', default=msg['tipo'], action='store', type=str, choices=['0', '2', '3', '5', '6', '9'],
-                        help='tipo de servicio -> 0-general | 2-interno | 3-vigilancia | 5-continuación | 6-acuse recibo | 9-rectificar')
+    parser.add_argument('-t', '--tipo', default=msg['tipo'], action='store', type=str, choices=['0', '1', '2', '3', '5', '6', '9'],
+                        help='tipo de servicio -> 0-general | 1-vigilancia tramo | 2-interno | 3-vigilancia línea | 5-continuación | 6-acuse recibo | 9-rectificación')
     parser.add_argument('--incd', default=msg['incd'], action='store', type=str, choices=['0', '1', '2', '3', '4'],
                         help='incidencia en acuse -> 1-niebla | 2-ausencia | 3-ocupada | 4-avería')
     parser.add_argument('-o', '--origen', default=msg['origen'], action='store', type=int, metavar='origen', help='torre de origen')
@@ -63,16 +63,16 @@ def get_arguments(msg, lencript):
             print(f'{str(pos).zfill(2)} - {val}')
         sys.exit(0)
 
-    # Asignar descodificación / codificación automaticamente. Si comienza por ~ */*/* -> descodificar
+    # Asignar descodificación / codificación automaticamente. Si comienza por ~ */*/* o 3/*** -> descodificar
     if arg.zcodif is None:
-        if re.match(r'^\d/(.+?)/(.+?)', arg.mensaje) is None:
+        if re.match(r'^(\d/(.+?)/(.+?))|(3/(.{3,}?))', arg.mensaje) is None:
             arg.zcodif = 0
             logging.info('Auto codificar = 0')
         else:
             arg.zcodif = 1
             logging.info('Auto descodificar = 1')
 
-    # Asignar rectificacion automaticamente.
+    # Asignar rectificacion automaticamente
     if arg.tipo == '9' and not arg.rect:
         arg.rect = random.choice(['6', '9'])
 
@@ -187,10 +187,18 @@ def zcodif_codificar(arg, msg, lencript):
     else:
         prefijo = msg['tipo'] + '/'
 
-        if msg['tipo'] == '3':  # Servicio de vigilancia
+        if msg['tipo'] == '1':  # Vigilancia de tramo
             # 3/0x1052/191709
             msg['prioridad'] = ''
             msg['referencia'] = ''
+            sufijo = ''
+
+        elif msg['tipo'] == '3':  # Vigilancia de línea
+            # 3/0x1/616
+            msg['prioridad'] = ''
+            msg['referencia'] = ''
+            msg['origen'] = '0'
+            msg['destino'] = '0'
             sufijo = ''
 
         elif msg['tipo'] == '6':  # Servicio acuse de recibo
@@ -206,7 +214,7 @@ def zcodif_codificar(arg, msg, lencript):
             msg['destino'] = '0'
             sufijo = ''
 
-        elif msg['tipo'] == '9':  # Rectificar
+        elif msg['tipo'] == '9':  # Rectificación
             # 9/0x1052/09/6
             # 9/0x1052/09/9
             msg['horadia'] = ''
@@ -221,12 +229,16 @@ def zcodif_codificar(arg, msg, lencript):
         msg['origen'] = ''
     if int(msg['destino']) == 0 and int(msg['origen']) >= 0:
         msg['destino'] = ''
+    # Vigilancia de línea sin origen ni destino
+    if msg['tipo'] == '3':
+        msg['origen'] = ''
+        msg['destino'] = ''
 
     # Mensaje formateado
     msgfmt = str(prefijo + msg['prioridad'] + '/' + msg['origen'] + msg['destino'] + '/' + msg['horadia'] + msg['referencia'] + sufijo)
 
     # Eliminar duplicados // por campos vacíos y / al final
-    msgfmt = re.sub(r'\/\/', r'/', msgfmt)
+    msgfmt = re.sub(r'\/\/+', r'/', msgfmt)
     msgfmt = re.sub(r'\/$', r'', msgfmt)
 
     logging.info('Mensaje raw:\t %s', msgfmt)
@@ -248,7 +260,13 @@ def zcodif_descodificar(arg, msg, lencript):
         # Extraer interrupciones finales si las hubiera - https://regex101.com/r/5LCWJm/1
         msg['regfin'] = ''
         while True:
-            if re.match(r'^(([0248](/\d*){5})|([3569](/\d*){3})).+(/(\d{3})/(?:(\d{4,6})/)?([1-4]))+$', ciperm) is not None:
+            # Comienza buscando el nº del tipo de cabecera más los grupos de '/' correspondientes
+            # y finaliza buscando el formato de la interrupción 
+            if re.match(r'^(([0248](/\d*){5})|'
+                            '([69](/\d*){4})|'
+                            '([135](/\d*){1}))'
+                            '.+'
+                            '(/(\d{3})/(?:(\d{4,6})/)?([1-4]))+$', ciperm) is not None:
                 regfin = re.search(r'(/(\d{3})/(?:(\d{4,6})/)?([1-4]))+$', ciperm)
             else:
                 break
@@ -315,9 +333,14 @@ def zcodif_descodificar(arg, msg, lencript):
             else:
                 msg['tipo'] = '0'
 
+        # Procesar tipo 1
+        elif re.match(r'^([1])()/(\d{2,6})/(\d{3,6})()\b', ciperm) is not None:
+            search = re.search(r'^([1])()/(\d{2,6})/(\d{3,6})()\b', ciperm)
+            msg['tipo'] = search.group(1)
+
         # Procesar tipo 3
-        elif re.match(r'^(3)()/(\d{2,6})/(\d{3,6})()\b', ciperm) is not None:
-            search = re.search(r'^(3)()/(\d{2,6})/(\d{3,6})()\b', ciperm)
+        elif re.match(r'^([3])()()/(\d{3,6})()\b', ciperm) is not None:
+            search = re.search(r'^([3])()()/(\d{3,6})()\b', ciperm)
             msg['tipo'] = search.group(1)
 
         # Procesar tipo 5
@@ -391,8 +414,9 @@ def imprimir(arg, msg):
     else:
         print('-' * 80)
         if msg['tipo'] == '0': print(f"Tipo:\t\t 0 - General")
+        if msg['tipo'] == '1': print(f"Tipo:\t\t 1 - Vigilancia de Tramo")
         if msg['tipo'] == '2': print(f"Tipo:\t\t 2 - Servicio Interno")
-        if msg['tipo'] == '3': print(f"Tipo:\t\t 3 - Vigilancia")
+        if msg['tipo'] == '3': print(f"Tipo:\t\t 3 - Vigilancia de Línea")
         if msg['tipo'] == '5': print(f"Tipo:\t\t 5 - Continuación")
         if msg['tipo'] == '6':
             print(f"Tipo:\t\t 6 - Acuse de recibo")
@@ -407,7 +431,7 @@ def imprimir(arg, msg):
             if msg['incd'] == '4':
                 print(f"Estado:\t\t 4 - Incidencia avería")
         if msg['tipo'] == '9':
-            print(f"Tipo:\t\t 9 - Rectificar")
+            print(f"Tipo:\t\t 9 - Rectificación")
             if msg['rect'] == '6':
                 print(f"Petición:\t 6 - Repetir referencia")
             if msg['rect'] == '9':
