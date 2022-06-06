@@ -56,18 +56,6 @@ Cuando es recibido por una torre, ya sea la de destino o alguna intermedia, se d
     > telop -p 8 -r 12 -o 10 -d 50 'Texto'
 
 
-**1 - Vigilancia de Tramo**
-
-Controlar y mantener la atención sobre un tramo de la línea. Utilizado entre comandancias intermedias o, habitualmente, como confirmación a un mensaje de vigilancia de línea.
-
-Su recepción se confirma devolviendo otro mensaje de vigilancia indicando las torres oportunas.
-
-- Desde comandancia '01' a la '06', formato breve:
-    > telop -t 1 -o 1 -d 6 -c -b
-- Confirmación desde comandancia '06' a '01':
-    > telop -t 1 -o 6 -d 1 -c
-
-
 **2 - Servicio interno**
 
 Similar a un mensaje general, pero utilizado sólo para indicaciones de servicio entre cualquier operario de torre.
@@ -78,14 +66,16 @@ Similar a un mensaje general, pero utilizado sólo para indicaciones de servicio
     > telop -t 2 -o 45 -d 1 -b 'Texto ejemplo'
 
 
-**3 - Vigilancia de Línea**
+**3 - Vigilancia**
 
 Controlar y mantener la atención sobre la línea. En reposo se mandaban cada media hora desde la cabecera de línea con destino tanto al final de la línea como de cada ramal.
 
-Para confirmar su recepción se devuelve otro mensaje, de vigilancia de tramo, desde la torre correspondiente.
+Para confirmar su recepción se devuelve otro mensaje de vigilancia indicando las torres oportunas.
 
-- Mensaje de vigilancia de línea con formato de fecha breve:
-    > telop -t 3 -b
+- Mensaje de control, por ejemplo, con valor '99' a modo de comodín a todos los extremos de línea y ramales, origen '0', formato fecha breve:
+    > telop -t 3 -o 0 -d 99 -c -b
+- Confirmación al mensaje anterior. Comandancia de origen '07' y destino '01':
+    > telop -t 3 -o 7 -d 1 -c
 
 
 **5 - Continuación**
@@ -141,7 +131,7 @@ Es posible generar un mensaje con sólo un número de torre en vez del formato h
 
 ### Opciones del programa:
 ```
-usage: telop [-h] [-p {0,4,8}] [-t {0,1,2,3,5,6,9}] [--incd {0,1,2,3,4}]
+usage: telop [-h] [-p {0,4,8}] [-t {0,2,3,5,6,9}] [--incd {0,1,2,3,4}]
              [-o origen] [-d destino] [-b] [--rect {6,9}] [-c] [--diccionario]
              [--password PASSWORD] [-r referencia] [--batch] [-v] [--version]
              [-z {0,1}]
@@ -154,10 +144,10 @@ optional arguments:
   -h, --help            show this help message and exit
   -p {0,4,8}, --prioridad {0,4,8}
                         prioridad -> 0-ordinario | 4-urgente | 8-urgentísimo
-  -t {0,1,2,3,5,6,9}, --tipo {0,1,2,3,5,6,9}
-                        tipo de servicio -> 0-general | 1-vigilancia tramo
-                        2-interno | 3-vigilancia línea | 5-continuación |
-                        6-acuse recibo | 9-rectificación
+  -t {0,2,3,5,6,9}, --tipo {0,2,3,5,6,9}
+                        tipo de servicio -> 0-general | 2-interno |
+                        3-vigilancia | 5-continuación | 6-acuse recibo |
+                        9-rectificación
   --incd {0,1,2,3,4}    incidencia en acuse -> 1-niebla | 2-ausencia |
                         3-ocupada | 4-avería
   -o origen, --origen origen
@@ -238,14 +228,6 @@ A/B/___C__/___D____/E
   |    -------------------------------- C torre de origen(3) + torre de destino(3)
   ------------------------------------- B prioridad(1)
 
-1  /0x10x5/234104 -> Vigilancia de tramo
-|      |       |
-|      |       |
-|      |       -- D hora(2) + minutos(2) + dia(2)
-|      -------------------------------- C torre de origen(3) + torre de destino(3)
-|
------------------ A tipo de servicio(1)
-
 2  /0x10x5/2341040x/013/252730141/1x0/2 -> Comunicación interna
 |      |       |     |   \         /  |
 |      |       |     |    \       /   - A tipo de servicio(1)
@@ -256,11 +238,11 @@ A/B/___C__/___D____/E
 |
 --------------------------------------- A tipo de servicio(1)
 
-3         /234104 -> Vigilancia de línea
-|              |
-|              |
-|              -- D hora(2) + minutos(2) + dia(2)
-|
+3  /0x10x5/234104 -> Vigilancia
+|      |       |
+|      |       |
+|      |       -- D hora(2) + minutos(2) + dia(2)
+|      ---------- C torre de origen(3) + torre de destino(3)
 |
 ----------------- A tipo de servicio(1)
 
@@ -280,7 +262,7 @@ A/B/___C__/___D____/E
 | ----------- B prioridad(1)
 ------------- A tipo de servicio(1)
 
-9/0/0x10x5/04/6 -> Rectificar
+9/0/0x10x5/04/6 -> Rectificación
 | |    |   |  |
 | |    |   |  - E sufijo tipo de petición(1)
 | |    |   ---- D referencia(2)
