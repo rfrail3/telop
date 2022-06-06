@@ -51,9 +51,10 @@
 	}
 	div#codops {
 	    display: none;
-	    margin: 10px auto 15px auto;
+	    margin: 10px auto 12px auto;
 	    align-items: flex-start;
 	    justify-content: flex-start;
+	    min-height: 11em;
 	}
 	div#codops table {
 	    border: none;
@@ -122,15 +123,16 @@
 	div#desc ul{
 	    margin-top: 0px;
 	    margin-bottom: 0px;
+	    padding-inline-start: 35px;
 	}
 	div#desc li{
 	    margin-bottom: 0.4em;
 	}
-	#opincd, #oprectf, #fill { display: none; }
+	#opincd, #oprectf { display: none; }
 	.info a{ color: maroon; }
 	pre i { margin-left: 5px; }
 	textarea { margin-bottom: 5px; }
-	pre, button, textarea, div#codops { width: 85%; }
+	pre, button, textarea, div#codops { width: 80%; }
 	span#destgif img{ box-shadow: 0px 10px 6px -6px #777; border: 1px solid #d6d6d6; }
 
 	@media only screen and (max-width: 888px) {
@@ -147,6 +149,7 @@
 		}
 		div#content { width: calc(98% - 5px); }
 		pre, button, textarea, div#codops { width: 95%; }
+		div#codops { min-height: auto; }
 		textarea { font-size: 0.9em; }
 		div#desc { display: none !important; }
 	}
@@ -220,10 +223,6 @@
                 <tr id="opref">
                     <td onmouseover="desc(innerHTML)" onmouseout="desc()">Referencia:</td>
                     <td><input type="number" id="mref" min="1" max="99" pattern="\d{2}" /></td>
-                </tr>
-                <tr id="fill">
-                    <td>&nbsp; </td>
-                    <td>&nbsp; </td>
                 </tr>
             </table>
             <div id="desc"></div>
@@ -310,7 +309,6 @@
             document.getElementById("opref").style.display = "table-row";
             document.getElementById("opincd").style.display = "none";
             document.getElementById("oprectf").style.display = "none";
-            document.getElementById("fill").style.display = "none";
             document.getElementById("form1").style.textDecoration = "none";
             document.getElementById("form1").style.color = "maroon";
 
@@ -328,13 +326,11 @@
             if ( document.getElementById("mrecep").options[mrecep.selectedIndex].value == 3 ) {
                 document.getElementById("opprio").style.display = "none";
                 document.getElementById("opref").style.display = "none";
-                document.getElementById("fill").style.display = "table-row";
             }
             // Mostrar opciones Continuación
             if ( document.getElementById("mrecep").options[mrecep.selectedIndex].value == 5 ) {
                 document.getElementById("ophora").style.display = "none";
                 document.getElementById("optdst").style.display = "none";
-                document.getElementById("fill").style.display = "table-row";
             }
             // Mostrar opciones Acuse Recibo
             if ( document.getElementById("mrecep").options[mrecep.selectedIndex].value == 6 ) {
