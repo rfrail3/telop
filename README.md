@@ -96,14 +96,14 @@ Confirmar la recepción de un mensaje, general o de servicio interno, junto con 
     > telop -t 6 -o 30 -d 1 -r 17 --incd 1
 
 
-**9 - Rectificación**
+**1 - Rectificación**
 
 Solicitar la anulación o retransmisión de un mensaje por su referencia.
 
 - Repetir mensaje con referencia '23' desde la torre '021' a la '001':
-    > telop -t 9 -o 21 -d 1 --rect 6 -r 23
+    > telop -t 1 -o 21 -d 1 --rect 6 -r 23
 - Anular mensaje con referencia '12' desde la torre '021' a la '001' con prioridad '8':
-    > telop -t 9 -o 21 -d 1 --rect 9 -r 12 -p 8
+    > telop -t 1 -o 21 -d 1 --rect 9 -r 12 -p 8
 
 
 ### Modificaciones de formato
@@ -131,7 +131,7 @@ Es posible generar un mensaje con sólo un número de torre en vez del formato h
 
 ### Opciones del programa:
 ```
-usage: telop [-h] [-p {0,4,8}] [-t {0,2,3,5,6,9}] [--incd {0,1,2,3,4}]
+usage: telop [-h] [-p {0,4,8}] [-t {0,1,2,3,5,6}] [--incd {0,1,2,3,4}]
              [-o origen] [-d destino] [-b] [--rect {6,9}] [-c] [--diccionario]
              [--password PASSWORD] [-r referencia] [--batch] [-v] [--version]
              [-z {0,1}]
@@ -144,7 +144,7 @@ optional arguments:
   -h, --help            show this help message and exit
   -p {0,4,8}, --prioridad {0,4,8}
                         prioridad -> 0-ordinario | 4-urgente | 8-urgentísimo
-  -t {0,2,3,5,6,9}, --tipo {0,2,3,5,6,9}
+  -t {0,1,2,3,5,6}, --tipo {0,1,2,3,5,6}
                         tipo de servicio -> 0-general | 2-interno |
                         3-vigilancia | 5-continuación | 6-acuse recibo |
                         9-rectificación
@@ -262,7 +262,7 @@ A/B/___C__/___D____/E
 | ----------- B prioridad mensaje a continuar(1)
 ------------- A tipo de servicio(1)
 
-9/0/0x10x5/04/6 -> Rectificación
+1/0/0x10x5/04/6 -> Rectificación
 | |    |   |  |
 | |    |   |  - E sufijo tipo de petición(1)
 | |    |   ---- D referencia mensaje rectificado(2)

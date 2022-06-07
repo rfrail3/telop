@@ -168,11 +168,11 @@
                     <td>Tipo:</td>
                     <td onmouseover="desc('tipo')" onmouseout="desc()"><select id="mrecep" onchange="txtformat()">
                         <option value="0">0 - General</option>
+                        <option value="1">1 - Rectificación</option>
                         <option value="2">2 - Serv. Interno</option>
                         <option value="3">3 - Vigilancia</option>
                         <option value="5">5 - Continuación</option>
                         <option value="6">6 - Acuse de Recibo</option>
-                        <option value="9">9 - Rectificación</option>
                         </select>
                     </td>
                 </tr>
@@ -256,11 +256,11 @@
 		txt = '\
 		 <ul>\
 		  <li><b>General:</b> &nbsp;&nbsp;Mensaje de comunicación habitual.</li>\
+		  <li><b>Rectificación:</b> &nbsp;&nbsp;Solicitar anulación o retransmisión de un mensaje.</li>\
 		  <li><b>Servicio interno:</b> &nbsp;&nbsp;Indicaciones de servicio entre torres.</li>\
 		  <li><b>Vigilancia:</b> &nbsp;&nbsp;Controlar y mantener la atención sobre la línea.</li>\
 		  <li><b>Continuación:</b> &nbsp;&nbsp;Retomar la transmisión de un mensaje interrumpido en una torre.</li>\
 		  <li><b>Acuse de recibo:</b> &nbsp;&nbsp;Confirmar la recepción de un mensaje junto con el motivo que lo provoca.</li>\
-		  <li><b>Rectificación:</b> &nbsp;&nbsp;Solicitar anulación o retransmisión de un mensaje.</li>\
 		</ul>';
 	} else if ( x == 'estado' ) {
 	    document.getElementById("desc").style.display = "inline-block";
@@ -337,7 +337,7 @@
                 document.getElementById("opincd").style.display = "table-row";
             }
             // Opciones Rectificación
-            if ( document.getElementById("mrecep").options[mrecep.selectedIndex].value == 9 ) {
+            if ( document.getElementById("mrecep").options[mrecep.selectedIndex].value == 1 ) {
                 document.getElementById("oprectf").style.display = "table-row";
                 document.getElementById("opprio").style.display = "table-row";
                 document.getElementById("ophora").style.display = "none";
@@ -455,7 +455,7 @@
                 sufijo = '';
                 break;
 
-            case '9':  // Servicio de rectificación
+            case '1':  // Servicio de rectificación
                 var prefijo = msg['tipo'] + '/';
                 msg['horadia'] = '';
                 sufijo = '/' + msg['rectf'];
@@ -501,7 +501,7 @@
         // Extraer interrupciones finales si las hubiera
         msg['regfin'] = '';
         while(true) {
-            if ((/^(([0248](\/\d*){5})|([3569](\/\d*){3})).+(\/(\d{3})\/(?:(\d{4,6})\/)?([1-4]))+$/g).test(ciperm)) {
+            if ((/^(([0248](\/\d*){5})|([1356](\/\d*){3})).+(\/(\d{3})\/(?:(\d{4,6})\/)?([1-4]))+$/g).test(ciperm)) {
                 regfin = (/(\/(\d{3})\/(?:(\d{4,6})\/)?([1-4]))+$/g).exec(ciperm);
             } else {
                 break;
@@ -588,9 +588,9 @@
                 msg['tipo'] = search[1];
                 msg['incd'] = search[5];
 
-            // Procesar tipo 9
-            } else if ((/^(9)\/([048])\/(\d{2,6})\/(\d{2})\/([69])\b/).test(ciperm)) {
-                search = (/^(9)\/([048])\/(\d{2,6})\/(\d{2})\/([69])\b/g).exec(ciperm);
+            // Procesar tipo 1
+            } else if ((/^(1)\/([048])\/(\d{2,6})\/(\d{2})\/([69])\b/).test(ciperm)) {
+                search = (/^(1)\/([048])\/(\d{2,6})\/(\d{2})\/([69])\b/g).exec(ciperm);
                 msg['tipo'] = search[1]
                 msg['rectf'] = search[5]
 
@@ -671,7 +671,7 @@
                     case '4':
                         salida += "<i>Estado:</i>\t 4 - Incidencia avería<br>"; 
                }; break;
-            case '9': salida += "<i>Tipo:</i>\t\t 9 - Rectificación<br>";
+            case '1': salida += "<i>Tipo:</i>\t\t 1 - Rectificación<br>";
                 switch (msg['rectf']) {
                     case '6':
                         salida += "<i>Petición:</i>\t 6 - Repetir referencia<br>"; break;

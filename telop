@@ -29,8 +29,8 @@ def get_arguments(msg, lencript):
     parser = argparse.ArgumentParser()
     parser.add_argument('-p', '--prioridad', default=msg['prioridad'], action='store', type=str, choices=['0', '4', '8'],
                         help='prioridad -> 0-ordinario | 4-urgente | 8-urgentísimo')
-    parser.add_argument('-t', '--tipo', default=msg['tipo'], action='store', type=str, choices=['0', '2', '3', '5', '6', '9'],
-                        help='tipo de servicio -> 0-general | 2-interno | 3-vigilancia | 5-continuación | 6-acuse recibo | 9-rectificación')
+    parser.add_argument('-t', '--tipo', default=msg['tipo'], action='store', type=str, choices=['0', '1', '2', '3', '5', '6'],
+                        help='tipo de servicio -> 0-general | 1-rectificación | 2-interno | 3-vigilancia | 5-continuación | 6-acuse recibo')
     parser.add_argument('--incd', default=msg['incd'], action='store', type=str, choices=['0', '1', '2', '3', '4'],
                         help='incidencia en acuse -> 1-niebla | 2-ausencia | 3-ocupada | 4-avería')
     parser.add_argument('-o', '--origen', default=msg['origen'], action='store', type=int, metavar='origen', help='torre de origen')
@@ -73,7 +73,7 @@ def get_arguments(msg, lencript):
             logging.info('Auto descodificar = 1')
 
     # Asignar rectificacion automaticamente
-    if arg.tipo == '9' and not arg.rect:
+    if arg.tipo == '1' and not arg.rect:
         arg.rect = random.choice(['6', '9'])
 
     # En codificacion, comprobar requisitos y eliminar new line siempre
@@ -206,9 +206,9 @@ def zcodif_codificar(arg, msg, lencript):
             msg['destino'] = '0'
             sufijo = ''
 
-        elif msg['tipo'] == '9':  # Rectificación
-            # 9/8/0x1052/09/6
-            # 9/0/0x1052/09/9
+        elif msg['tipo'] == '1':  # Rectificación
+            # 1/8/0x1052/09/6
+            # 1/0/0x1052/09/9
             msg['horadia'] = ''
             sufijo = '/' + msg['rect']
 
@@ -251,7 +251,7 @@ def zcodif_descodificar(arg, msg, lencript):
             # Comienza buscando el nº del tipo de cabecera más los grupos de '/' correspondientes
             # y finaliza buscando el formato de la interrupción
             if re.match(r'^(([0248](/\d*){5})|'
-                         '([3569](/\d*){3}))'
+                         '([1356](/\d*){3}))'
                          '.+'
                          '(/(\d{3})/(?:(\d{4,6})/)?([1-4]))+$', ciperm) is not None:
                 regfin = re.search(r'(/(\d{3})/(?:(\d{4,6})/)?([1-4]))+$', ciperm)
@@ -336,9 +336,9 @@ def zcodif_descodificar(arg, msg, lencript):
             msg['tipo'] = search.group(1)
             msg['incd'] = search.group(5)
 
-        # Procesar tipo 9
-        elif re.match(r'^(9)/([048])/(\d{2,6})/(\d{2})/([69])\b', ciperm) is not None:
-            search = re.search(r'^(9)/([048])/(\d{2,6})/(\d{2})/([69])\b', ciperm)
+        # Procesar tipo 1
+        elif re.match(r'^(1)/([048])/(\d{2,6})/(\d{2})/([69])\b', ciperm) is not None:
+            search = re.search(r'^(1)/([048])/(\d{2,6})/(\d{2})/([69])\b', ciperm)
             msg['tipo'] = search.group(1)
             msg['rect'] = search.group(5)
 
@@ -411,8 +411,8 @@ def imprimir(arg, msg):
                 print(f"Estado:\t\t 3 - Incidencia vanguardia ocupada")
             if msg['incd'] == '4':
                 print(f"Estado:\t\t 4 - Incidencia avería")
-        if msg['tipo'] == '9':
-            print(f"Tipo:\t\t 9 - Rectificación")
+        if msg['tipo'] == '1':
+            print(f"Tipo:\t\t 1 - Rectificación")
             if msg['rect'] == '6':
                 print(f"Petición:\t 6 - Repetir referencia")
             if msg['rect'] == '9':
