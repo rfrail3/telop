@@ -10,7 +10,7 @@ Telop (TELégrafoÓPtico) - Utilidad para codificar y descodificar mensajes de t
 ```
 $ telop 'Telegrama de prueba'
 --------------------------------------------------------------------------------
-Tipo:		 0 Telegrama general
+Tipo:		 0 - General
 Prioridad:	 0
 T. Origen:	 001
 T. Destino:	 052
@@ -28,7 +28,7 @@ Mensaje:	 0/0x1052/2310x80x/042/5x1421x41/627102x10/9x13149x2/52730141x/10/0
 ```
 $ telop '0/0x1052/2310x80x/042/5x1421x41/627102x10/9x13149x2/52730141x/10/0'
 --------------------------------------------------------------------------------
-Tipo:		 0 Telegrama general
+Tipo:		 0 - General
 Prioridad:	 0
 T. Origen:	 001
 T. Destino:	 052
@@ -223,7 +223,7 @@ A/B/___C__/___D____/E
   |    |       |     |   \         /  |
   |    |       |     |    \       /   - B prioridad(1)
   |    |       |     |     ------------ - novenales de mensaje
-  |    |       |     ------------------ E sufijo nº de novenales completos(2) y nº de digitos en el resto(1)
+  |    |       |     ------------------ E sufijo nº de novenales completos(2) y nº digitos resto(1)
   |    |       ------------------------ D hora(2) + minutos(2) + dia(2) + referencia(2)
   |    -------------------------------- C torre de origen(3) + torre de destino(3)
   ------------------------------------- B prioridad(1)
@@ -232,7 +232,7 @@ A/B/___C__/___D____/E
 |      |       |     |   \         /  |
 |      |       |     |    \       /   - A tipo de servicio(1)
 |      |       |     |     ------------ - novenales de mensaje
-|      |       |     ------------------ E sufijo nº de novenales completos(2) y nº de digitos en el resto(1)
+|      |       |     ------------------ E sufijo nº de novenales completos(2) y nº digitos resto(1)
 |      |       ------------------------ D hora(2) + minutos(2) + dia(2) + referencia(2)
 |      -------------------------------- C torre de origen(3) + torre de destino(3)
 |
