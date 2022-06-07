@@ -200,10 +200,11 @@ def zcodif_codificar(arg, msg, lencript):
             sufijo = '/' + msg['incd']
 
         elif msg['tipo'] == '5':  # Continuar transmisión
-            # 5/4/0x1/0x
-            # 5/4/0x1/0x
+            # 5/0x1/0x
+            # 5/0x1/0x
             msg['horadia'] = ''
             msg['destino'] = '0'
+            msg['prioridad'] = ''
             sufijo = ''
 
         elif msg['tipo'] == '1':  # Rectificación
@@ -251,7 +252,8 @@ def zcodif_descodificar(arg, msg, lencript):
             # Comienza buscando el nº del tipo de cabecera más los grupos de '/' correspondientes
             # y finaliza buscando el formato de la interrupción
             if re.match(r'^(([0248](/\d*){5})|'
-                         '([1356](/\d*){3}))'
+                         '([16](/\d*){4})|'
+                         '([35](/\d*){2}))'
                          '.+'
                          '(/(\d{3})/(?:(\d{4,6})/)?([1-4]))+$', ciperm) is not None:
                 regfin = re.search(r'(/(\d{3})/(?:(\d{4,6})/)?([1-4]))+$', ciperm)
@@ -326,8 +328,8 @@ def zcodif_descodificar(arg, msg, lencript):
             msg['tipo'] = search.group(1)
 
         # Procesar tipo 5
-        elif re.match(r'^(5)/([048])/(\d{2,3})/(\d{2})()\b', ciperm) is not None:
-            search = re.search(r'^(5)/([048])/(\d{2,3})/(\d{2})()\b', ciperm)
+        elif re.match(r'^(5)/(\d{2,3})/(\d{2})()\b', ciperm) is not None:
+            search = re.search(r'^(5)/(\d{2,3})/(\d{2})()\b', ciperm)
             msg['tipo'] = search.group(1)
 
         # Procesar tipo 6
