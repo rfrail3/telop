@@ -254,12 +254,12 @@ A/B/___C__/___D____/E
 | -------------------- B prioridad mensaje recibido(1)
 ---------------------- A tipo de servicio(1)
 
-5  /0x1   /03 -> Continuación
-|      |   |
-|      |   |
-|      |   -- D referencia mensaje a continuar(2)
-|      ------ C torre de origen(3)
-|
+5/0/0x1   /03 -> Continuación
+| |    |   |
+| |    |   |
+| |    |   -- D referencia mensaje a continuar(2)
+| |    ------ C torre de origen(3)
+| ----------- B prioridad mensaje a continuar(1)
 ------------- A tipo de servicio(1)
 
 1/0/0x10x5/04/6 -> Rectificación
@@ -267,7 +267,7 @@ A/B/___C__/___D____/E
 | |    |   |  - E sufijo tipo de petición(1)
 | |    |   ---- D referencia mensaje rectificado(2)
 | |    -------- C torre de origen(3) + torre de destino(3)
-| ------------- B prioridad(1)
+| ------------- B prioridad mensaje rectificado(1)
 --------------- A tipo de servicio(1)
 ```
 
