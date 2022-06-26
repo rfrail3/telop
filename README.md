@@ -428,7 +428,16 @@ Páginas: 	16
 Fuente:		Cuadernos de Historia Contemporánea Nº 29
 Url:		https://revistas.ucm.es/index.php/CHCO
 
+Título:		Semanario Pintoresco Español. Segunda Serie - Tomo III
+Artículo:	Telégrafos Españoles (p.155) y Rectificación (p.168)
+Autor:		F. Navarro Villoslada
+Fecha de pub.:	1841
+Url:		Google Books - https://books.google.es/books?id=pVJfAAAAcAAJ
+
+
 VV/AA:		https://forohistorico.coit.es/index.php/wiki-telegrafia-optica/category/bibliografia-y-referencias
+
+
 ```   
 
 ### Versión web
